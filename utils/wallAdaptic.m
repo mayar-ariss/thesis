@@ -147,6 +147,10 @@ for i = 1:size(combined, 1)
     combined_with_names{i, end} = node_name{idx}; % Assign the corresponding node name
 end
 
+%%%%%%%%%%%%%%%%%%
+%%%% ELEMENTS %%%%
+%%%%%%%%%%%%%%%%%%
+
 % Define the number of nodes per element
 nodes_per_element = 8;
 
@@ -154,7 +158,7 @@ nodes_per_element = 8;
 num_elements = size(combined_with_names, 1) / nodes_per_element;
 
 % Initialize the matrix to store elements and their node names
-elements_with_nodes = cell(num_elements, 1);
+elements_with_nodes = cell(num_elements, 3);
 
 % Extract node names for each element
 for i = 1:num_elements
@@ -165,13 +169,21 @@ for i = 1:num_elements
     % Extract node names for the current element
     node_names = combined_with_names(start_idx:end_idx, end);
 
+    % Assign element name
+    elem_name = sprintf('elem%d', i);
+
     % Store node names for the current element
     elements_with_nodes{i} = node_names';
+
+    % Store element name and node names for the current element
+    elements_with_nodes{i, 1} = elem_name;
+    elements_with_nodes{i, 2} = 'macro1';
+    elements_with_nodes{i, 3} = node_names';
 end
 
 % Display the elements with their node names
 for i = 1:num_elements
-    fprintf('Element %d: %s\n', i, strjoin(elements_with_nodes{i}, ' '));
+    fprintf('Element %d (%s): %s\n', i, elements_with_nodes{i, 1}, strjoin(elements_with_nodes{i, 3}, ' '));
 end
 
 
@@ -195,13 +207,18 @@ if fid == -1
     error('Could not open file for writing: %s', output_file);
 end
 
-fprintf(fid, 'elm.name\n');
-for i = 1:numel(elements_with_nodes)
-    % Concatenate node names of the current element with spaces
-    node_names_str = strjoin(elements_with_nodes{i}, ' ');
+fprintf(fid, 'elm.name\tgrp.name \tnod.name\n');
+for i = 1:num_elements
+    % Get the element name and node names of the current element
+    elem_name = elements_with_nodes{i, 1};
+    macro_name = elements_with_nodes{i, 2};
+    node_names = elements_with_nodes{i, 3};
 
-    % Print the concatenated node names
-    fprintf(fid, '%s\n', node_names_str);
+    % Concatenate node names of the current element with spaces
+    node_names_str = strjoin(node_names, ' ');
+
+    % Print the element name, 'macro1', and concatenated node names
+    fprintf(fid, '%s\t%s\t%s\n', elem_name, macro_name, node_names_str);
 end
 
 
