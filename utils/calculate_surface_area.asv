@@ -1,0 +1,76 @@
+
+
+
+% Preallocate surface areas array
+num_surfaces_spandrels = size(XSpandrels, 2);
+surfaceAreas_spandrels = zeros(1, num_surfaces_spandrels);
+
+diag=zeros(size(surfaceAreas_spandrels));
+XSpandrels_new=[];
+YSpandrels_new=[];
+ZSpandrels_new=[];
+XSpandrels_filtered=[];
+YSpandrels_filtered=[];
+ZSpandrels_filtered=[];
+
+% Calculate surface areas for each surface
+for i = 1:num_surfaces_spandrels
+
+    pts1=
+
+    diag(i) = norm([XSpandrels(1,i), YSpandrels(1,i), ZSpandrels(1,i)] - ...
+             [XSpandrels(3,i), YSpandrels(3,i), ZSpandrels(3,i)] ); 
+
+    if diag(i) == norm([XSpandrels(1,i), YSpandrels(1,i), ZSpandrels(1,i)] - ...
+             [XSpandrels(4,i), YSpandrels(4,i), ZSpandrels(4,i)] )  || ...
+             diag(i) == norm([XSpandrels(1,i), YSpandrels(1,i), ZSpandrels(1,i)] - ...
+             [XSpandrels(2,i), YSpandrels(2,i), ZSpandrels(2,i)] )  
+
+    else
+
+        XSpandrels_filtered(:,:)=XSpandrels(:,i);
+        YSpandrels_filtered(:,:)=YSpandrels(:,i);
+        ZSpandrels_filtered(:,:)=ZSpandrels(:,i);
+
+    end
+    
+end
+
+% Preallocate surface areas array
+num_surfaces_piers = size(XPiers, 2);
+surfaceAreas_piers = zeros(1, num_surfaces_piers);
+
+diag=zeros(size(surfaceAreas_piers));
+
+XPiers_filtered=[];
+YPiers_filtered=[];
+ZPiers_filtered=[];
+
+% Calculate surface areas for each surface
+for i = 1:num_surfaces_piers
+
+    diag(i) = norm([XPiers(1,i), YPiers(1,i), ZPiers(1,i)] - ...
+             [XPiers(3,i), YPiers(3,i), ZPiers(3,i)] ); 
+
+    if diag(i) == norm([XPiers(1,i), YPiers(1,i), ZPiers(1,i)] - ...
+             [XPiers(4,i), YPiers(4,i), ZPiers(4,i)] )  || ...
+             diag(i) == norm([XPiers(1,i), YPiers(1,i), ZPiers(1,i)] - ...
+             [XPiers(2,i), YPiers(2,i), ZPiers(2,i)] )  
+
+    else
+
+        XPiers_filtered(:,:)=XPiers(:,i);
+        YPiers_filtered(:,:)=YPiers(:,i);
+        ZPiers_filtered(:,:)=ZPiers(:,i);
+
+    end
+    
+end
+
+%     tri = delaunay(XSpandrels(:, i), YSpandrels(:, i));
+%     
+%     P = [XSpandrels(:, i), YSpandrels(:, i), ZSpandrels(:, i)];
+%     v1 = P(tri(:, 2), :) - P(tri(:, 1), :);
+%     v2 = P(tri(:, 3), :) - P(tri(:, 2), :);
+%     cp = 0.5 * cross(v1, v2);
+%     surfaceAreas(i) = sum(sqrt(dot(cp, cp, 2)));
